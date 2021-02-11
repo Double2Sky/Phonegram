@@ -36,6 +36,10 @@ class ConsoleHandler:
                                  'other parameters',
                             type=str)
 
+        parser.add_argument('phone_number',
+                            help='the number of phone that will be passed to the GetContact bot',
+                            type=str)
+
         return parser
 
     def _get_parameters(self, args):
@@ -79,3 +83,7 @@ class ConsoleHandler:
         except configparser.NoOptionError:
             logger.error("The configuration file doesn't contain the API_ID and API_HASH options")
             exit(-4)
+
+    @property
+    def phone_number(self):
+        return self._parameters.phone_number
