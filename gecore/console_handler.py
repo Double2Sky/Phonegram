@@ -67,21 +67,23 @@ class ConsoleHandler:
     @property
     def credentials(self):
         """
-        Method reads gets a pair API_ID, API_HASH from the config file are necessary for the Telegram Api Client
+        Method reads gets a tuple of SESSION_NAME, API_ID, API_HASH from the config file
+        are necessary for the Telegram Api Client
 
-        :return: pair API_ID, API_HASH
+        :return: tuple SESSION_NAME, API_ID, API_HASH
         """
         try:
+            session_name = self._config_parser.get('TELEGRAM_API', 'SESSION_NAME')
             api_id = self._config_parser.get('TELEGRAM_API', 'API_ID')
             api_hash = self._config_parser.get('TELEGRAM_API', 'API_HASH')
 
-            return api_id, api_hash
+            return session_name, api_id, api_hash
         except configparser.NoSectionError:
             logger.error("The configuration file doesn't contain [TELEGRAM_API] section, please insert this section "
-                         "with the API_ID and API_HASH options")
+                         "with the SESSION_NAME, API_ID and API_HASH options")
             exit(-3)
         except configparser.NoOptionError:
-            logger.error("The configuration file doesn't contain the API_ID and API_HASH options")
+            logger.error("The configuration file doesn't contain the SESSION_NAME, API_ID or API_HASH options")
             exit(-4)
 
     @property
