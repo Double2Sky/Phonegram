@@ -4,4 +4,3 @@ rsa~=4.7
 pyasn1~=0.4.8
 pyaes~=1.6.1
 Telethon~=1.19.5
-setuptools~=40.8.0
