@@ -31,19 +31,19 @@ class ConsoleHandler:
         """
         parser = argparse.ArgumentParser(prog=program_name, description=description, epilog=epilog)
 
-        parser.add_argument('credentials',
+        parser.add_argument('phone_number',
+                            help='the number of phone that will be passed to a bot',
+                            type=str)
+
+        parser.add_argument('-c', '--credentials',
                             help='the config file, containing credentials for a telegram client: api_id, api_hash and '
                                  'session strings',
                             default='./config/session.cfg',
                             type=str)
 
-        parser.add_argument('bots',
+        parser.add_argument('-b', '--bots',
                             help='the config file, containing information about bots',
                             default='./config/bots.cfg',
-                            type=str)
-
-        parser.add_argument('phone_number',
-                            help='the number of phone that will be passed to a bot',
                             type=str)
 
         return parser
@@ -56,14 +56,14 @@ class ConsoleHandler:
         """
         parameters = self._parser.parse_args(args)
 
-        if not os.path.exists(parameters.config):
+        if not os.path.exists(parameters.credentials):
             logger.error("The configuration file doesn't exist")
             exit(-1)
 
         # Read the config file
         self._config_parser = configparser.ConfigParser()
         try:
-            self._config_parser.read(parameters.config, encoding='utf-8')
+            self._config_parser.read(parameters.credentials, encoding='utf-8')
         except configparser.Error as error:
             logger.error(error)
             exit(-2)
@@ -92,15 +92,15 @@ class ConsoleHandler:
             exit(-4)
 
     @property
-    def session_strings(self):
+    def session_strings_section(self):
         """
         Method reads gets session strings from the config file
 
         :return: tuple of pairs <username, session_string>
         """
         try:
-            session_strings = self._config_parser['SESSION_STRINGS']
-            return session_strings
+            session_strings_section = self._config_parser['SESSION_STRINGS']
+            return session_strings_section
         except KeyError:
             logger.warning("There are no session strings in the session configuration file")
             exit(-1)
