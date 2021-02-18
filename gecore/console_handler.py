@@ -31,13 +31,19 @@ class ConsoleHandler:
         """
         parser = argparse.ArgumentParser(prog=program_name, description=description, epilog=epilog)
 
-        parser.add_argument('config',
-                            help='the config file, containing credentials for a telegram client: api_id, api_hash or '
-                                 'other parameters',
+        parser.add_argument('credentials',
+                            help='the config file, containing credentials for a telegram client: api_id, api_hash and '
+                                 'session strings',
+                            default='./config/session.cfg',
+                            type=str)
+
+        parser.add_argument('bots',
+                            help='the config file, containing information about bots',
+                            default='./config/bots.cfg',
                             type=str)
 
         parser.add_argument('phone_number',
-                            help='the number of phone that will be passed to the GetContact bot',
+                            help='the number of phone that will be passed to a bot',
                             type=str)
 
         return parser
@@ -67,23 +73,22 @@ class ConsoleHandler:
     @property
     def credentials(self):
         """
-        Method reads gets a tuple of SESSION_NAME, API_ID, API_HASH from the config file
-        are necessary for the Telegram Api Client
+        Method reads gets a tuple of API_ID, API_HASH from the config file
+        are necessary for the Telegram Client API
 
-        :return: tuple SESSION_NAME, API_ID, API_HASH
+        :return: tuple API_ID, API_HASH
         """
         try:
-            session_name = self._config_parser.get('TELEGRAM_API', 'SESSION_NAME')
-            api_id = self._config_parser.get('TELEGRAM_API', 'API_ID')
-            api_hash = self._config_parser.get('TELEGRAM_API', 'API_HASH')
+            api_id = self._config_parser.get('CLIENT_CREDENTIALS', 'API_ID')
+            api_hash = self._config_parser.get('CLIENT_CREDENTIALS', 'API_HASH')
 
-            return session_name, api_id, api_hash
+            return api_id, api_hash
         except configparser.NoSectionError:
-            logger.error("The configuration file doesn't contain [TELEGRAM_API] section, please insert this section "
-                         "with the SESSION_NAME, API_ID and API_HASH options")
+            logger.error("The configuration file doesn't contain [CLIENT_CREDENTIALS] section, please insert "
+                         "this section with the API_ID and API_HASH options")
             exit(-3)
         except configparser.NoOptionError:
-            logger.error("The configuration file doesn't contain the SESSION_NAME, API_ID or API_HASH options")
+            logger.error("The configuration file doesn't contain the API_ID or API_HASH options")
             exit(-4)
 
     @property
