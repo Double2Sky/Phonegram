@@ -110,3 +110,7 @@ class ConsoleHandler:
     @property
     def phone_number(self):
         return self._parameters.phone_number
+
+    @property
+    def config_parser(self):
+        return self._config_parser
