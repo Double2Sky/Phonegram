@@ -18,7 +18,7 @@ class ConsoleHandler:
         self._config_parser = None
 
         # Get parameters from the arguments received from the command line
-        self._parameters = self._get_parameters(args)
+        self._init_parameters(args)
 
     @staticmethod
     def _get_parser(program_name: str = None, description: str = None, epilog: str = None) -> argparse.ArgumentParser:
@@ -48,7 +48,7 @@ class ConsoleHandler:
 
         return parser
 
-    def _get_parameters(self, args):
+    def _init_parameters(self, args):
         """
         This method gets all parameters from the args of the command line.
         :param args: list of the arguments of the command line
@@ -60,15 +60,17 @@ class ConsoleHandler:
             logger.error("The configuration file doesn't exist")
             exit(-1)
 
+        self._parameters = parameters
+        self._read_config_file()
+
+    def _read_config_file(self):
         # Read the config file
         self._config_parser = configparser.ConfigParser()
         try:
-            self._config_parser.read(parameters.credentials, encoding='utf-8')
+            self._config_parser.read(self._parameters.credentials, encoding='utf-8')
         except configparser.Error as error:
             logger.error(error)
             exit(-2)
-
-        return parameters
 
     @property
     def credentials(self):
