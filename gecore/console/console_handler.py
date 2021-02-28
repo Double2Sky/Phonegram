@@ -34,10 +34,6 @@ class ConsoleHandler:
         """
         parser = argparse.ArgumentParser(prog=program_name, description=description, epilog=epilog)
 
-        parser.add_argument('phone_number',
-                            help='the number of phone that will be passed to a bot',
-                            type=str)
-
         parser.add_argument('-c', '--credentials',
                             help='the config file, containing credentials for a telegram client: api_id, api_hash and '
                                  'session strings',
@@ -97,10 +93,6 @@ class ConsoleHandler:
         except configparser.NoOptionError:
             logger.error("The configuration file doesn't contain the API_ID or API_HASH options")
             exit(-4)
-
-    @property
-    def phone_number(self):
-        return self._parameters.phone_number
 
     @property
     def config_parser(self) -> configparser.ConfigParser:
