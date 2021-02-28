@@ -70,7 +70,9 @@ class ConsoleHandler:
         # Read the config file
         self._config_parser = configparser.ConfigParser()
         try:
-            self._config_parser.read(self._parameters.credentials, encoding='utf-8')
+            self._config_parser.read(self.session_file, encoding='utf-8')
+            if not self._config_parser.has_section(SESSION_STRINGS_SECTION):
+                self._config_parser.add_section(SESSION_STRINGS_SECTION)
         except configparser.Error as error:
             logger.error(error)
             exit(-2)
