@@ -12,11 +12,13 @@ async def get_session_string(api_id, api_hash):
 
     :param api_id: api_id of the client
     :param api_hash: api_hash of the client
-    :return: session string
+    :return: pair <username, session_string>
     """
     try:
         async with TelegramClient(StringSession(), api_id, api_hash) as client:
-            return client.session.save()
+            user = await client.get_me()
+            return user.username, client.session.save()
+
     except PhoneNumberInvalidError:
         logging.error("The invalid number was entered")
         exit(-1)
