@@ -2,6 +2,7 @@ import re
 import logging
 import asyncio
 from telethon import TelegramClient, events
+from telethon.sessions import StringSession
 
 logging.basicConfig(format='[%(asctime)s] MESSAGE:\n%(message)s\n',
                     level=logging.WARNING)
@@ -10,19 +11,25 @@ logging.basicConfig(format='[%(asctime)s] MESSAGE:\n%(message)s\n',
 class GetContactRequester:
     client: TelegramClient
 
-    def __init__(self, session_name: str, api_id: int, api_hash: str, chats: list):
+    def __init__(self, api_id: int, api_hash: str, session_strings, chats: list):
         """
         :param chats: a list of chats that will be listened by this client
+        :param session_strings: ConfigParser object representing the section of session strings
         """
-        self.client = TelegramClient(session_name, api_id, api_hash)
+        self.session_strings = session_strings
+
+        self.client = TelegramClient(StringSession(session_strings[0][1]),
+                                     api_id, api_hash)
         self.client.add_event_handler(self._handle_message, events.NewMessage(chats=chats, incoming=True, outgoing=False))
 
         self.chats = chats
         self.response = None
 
-    async def request(self, chat: str, phone_number: str):
+    async def request(self, phone_number: str):
         await self._start_client()
-        await self.client.send_message(chat, phone_number)
+
+        for chat in self.chats:
+            await self.client.send_message(chat, phone_number)
 
         # response is None only if the message wasn't processed
         while True:
