@@ -1,16 +1,43 @@
 import asyncio
+import re
 import sys
-from gecore.console_handler import ConsoleHandler
+
+from gecore.console.console_handler import ConsoleHandler, SESSION_STRINGS_SECTION
 from gecore.requester import GetContactRequester
+from gecore.utils import get_session_string
 
 
 async def main():
     console_handler = ConsoleHandler(sys.argv[1:])
-    phone_number = console_handler.phone_number
+    parser = console_handler.config_parser
 
-    requester = GetContactRequester(*console_handler.credentials, chats=['getcontact_real_bot'])
-    response = await requester.request('getcontact_real_bot', phone_number)
-    print('response =', response)
+    while True:
+        if len(parser[SESSION_STRINGS_SECTION]) == 0:
+            print("У вас нет ни одной активной сессии.")
+            pair = await get_session_string(*console_handler.credentials)
+            if pair is None:
+                print("Завершение работы.")
+                exit(0)
+            else:
+                username, session_string = pair
+                parser.set(SESSION_STRINGS_SECTION, username, session_string)
+                console_handler.dump_session_file()
+
+        while True:
+            phone_number = input("Введите номер телефона (exit|выход - для выхода): ")
+            if re.match('(exit|выход)', phone_number, re.IGNORECASE):
+                print('Завершение работы.')
+                exit(0)
+            elif re.match(r'^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$', phone_number, re.IGNORECASE):
+                break
+            else:
+                print("Некорректный ввод.")
+
+        requester = GetContactRequester(*console_handler.credentials,
+                                        session_strings=parser[SESSION_STRINGS_SECTION].items(),
+                                        chats=['getcontact_real_bot'])
+        response = await requester.request(phone_number)
+        print('response =', response)
 
 
 if __name__ == '__main__':
