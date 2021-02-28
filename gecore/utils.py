@@ -1,4 +1,5 @@
 import logging
+import re
 from telethon import TelegramClient
 from telethon.sessions import StringSession
 from telethon.errors.rpcerrorlist import PhoneNumberInvalidError
@@ -6,15 +7,26 @@ from telethon.errors.rpcerrorlist import PhoneNumberInvalidError
 logging.basicConfig(format='\n[%(asctime)s]: %(message)s\n')
 
 
-async def get_session_string(api_id, api_hash):
+async def get_session_string(api_id, api_hash, verbose=True):
     """
     Function makes connection to the Telegram client and returns the session string of this connection.
 
     :param api_id: api_id of the client
     :param api_hash: api_hash of the client
+    :param verbose: if it's True, a user will see a dialog message in the console
     :return: pair <username, session_string>
     """
     try:
+        if verbose:
+            while True:
+                answer = input("Хотите открыть новую сессию? (да/нет): ")
+                if re.match('(да|нет|д|н)', answer, re.IGNORECASE):
+                    break
+                else:
+                    print("Некорректный ввод.")
+            if re.match('(нет|н)', answer, re.IGNORECASE):
+                return None
+
         async with TelegramClient(StringSession(), api_id, api_hash) as client:
             user = await client.get_me()
             return user.username, client.session.save()
