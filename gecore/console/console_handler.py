@@ -5,6 +5,9 @@ import os
 
 logger = logging.getLogger('console_handler')
 
+SESSION_STRINGS_SECTION = 'SESSION_STRINGS'
+CLIENT_CREDENTIALS_SECTION = 'CLIENT_CREDENTIALS'
+
 
 class ConsoleHandler:
     NAME = 'gecore'
@@ -81,12 +84,12 @@ class ConsoleHandler:
         :return: tuple API_ID, API_HASH
         """
         try:
-            api_id = self._config_parser.get('CLIENT_CREDENTIALS', 'API_ID')
-            api_hash = self._config_parser.get('CLIENT_CREDENTIALS', 'API_HASH')
+            api_id = self._config_parser.get(CLIENT_CREDENTIALS_SECTION, 'API_ID')
+            api_hash = self._config_parser.get(CLIENT_CREDENTIALS_SECTION, 'API_HASH')
 
             return api_id, api_hash
         except configparser.NoSectionError:
-            logger.error("The configuration file doesn't contain [CLIENT_CREDENTIALS] section, please insert "
+            logger.error(f"The configuration file doesn't contain [{CLIENT_CREDENTIALS_SECTION}] section, please insert "
                          "this section with the API_ID and API_HASH options")
             exit(-3)
         except configparser.NoOptionError:
