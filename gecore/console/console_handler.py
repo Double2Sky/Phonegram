@@ -99,20 +99,6 @@ class ConsoleHandler:
             exit(-4)
 
     @property
-    def session_strings_section(self):
-        """
-        Method reads gets session strings from the config file
-
-        :return: tuple of pairs <username, session_string>
-        """
-        try:
-            session_strings_section = self._config_parser['SESSION_STRINGS']
-            return session_strings_section
-        except KeyError:
-            logger.warning("There are no session strings in the session configuration file")
-            exit(-1)
-
-    @property
     def phone_number(self):
         return self._parameters.phone_number
 
