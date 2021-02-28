@@ -115,5 +115,13 @@ class ConsoleHandler:
         return self._parameters.phone_number
 
     @property
-    def config_parser(self):
+    def config_parser(self) -> configparser.ConfigParser:
         return self._config_parser
+
+    @property
+    def session_file(self):
+        return self._parameters.credentials
+
+    def dump_session_file(self):
+        with open(self.session_file, 'w') as file:
+            self.config_parser.write(file)
