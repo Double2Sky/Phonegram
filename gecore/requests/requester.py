@@ -53,8 +53,6 @@ class GetContactRequester:
         self._console_handler.dump_session_file()
 
     async def request(self, phone_number: str):
-        await self._start_client()
-
         for chat in self.chats:
             await self.client.send_message(chat, phone_number)
 
