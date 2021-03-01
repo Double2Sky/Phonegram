@@ -3,6 +3,7 @@ import logging
 import asyncio
 from telethon import TelegramClient, events
 from telethon.sessions import StringSession
+from gecore.console.console_handler import SESSION_STRINGS_SECTION, ConsoleHandler
 
 logging.basicConfig(format='[%(asctime)s] MESSAGE:\n%(message)s\n',
                     level=logging.WARNING)
@@ -11,17 +12,16 @@ logging.basicConfig(format='[%(asctime)s] MESSAGE:\n%(message)s\n',
 class GetContactRequester:
     client: TelegramClient
 
-    def __init__(self, api_id: int, api_hash: str, session_strings, chats: list):
+    def __init__(self, console_handler: ConsoleHandler, chats: list):
         """
         :param chats: a list of chats that will be listened by this client
-        :param session_strings: ConfigParser object representing the section of session strings
+        :param console_handler: ConsoleHandler object
         """
-        self.session_strings = session_strings
-
-        self.client = TelegramClient(StringSession(session_strings[0][1]),
-                                     api_id, api_hash)
-        self.client.add_event_handler(self._handle_message, events.NewMessage(chats=chats, incoming=True, outgoing=False))
-
+        api_id, api_hash = console_handler.credentials
+        self._api_id = api_id
+        self._api_hash = api_hash
+        self._console_handler = console_handler
+        self._clients = None
         self.chats = chats
         self.response = None
 
