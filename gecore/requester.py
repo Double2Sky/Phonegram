@@ -34,6 +34,9 @@ class GetContactRequester:
         parser = self._console_handler.config_parser
         for username, session_string in parser[SESSION_STRINGS_SECTION].items():
             client = TelegramClient(StringSession(session_string), self._api_id, self._api_hash)
+            client.add_event_handler(self._handle_message,
+                                     events.NewMessage(chats=self.chats, incoming=True, outgoing=False))
+
             # Make connection: if the session string is correct, connection will be made without logging
             await client.start(phone=lambda: input("Пожалуйста, введите ваш номер телефона: "),
                                code_callback=lambda: input("Пожалуйста, введите полученный код подтверждения: "))
