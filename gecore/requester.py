@@ -25,6 +25,30 @@ class GetContactRequester:
         self.chats = chats
         self.response = None
 
+    async def run(self):
+        """
+        This method makes connection to the all sessions that specified in the session config file.
+        Also method initializes a dictionary containing the names of bots and list of TelegramClient objects.
+        """
+        clients = []
+        parser = self._console_handler.config_parser
+        for username, session_string in parser[SESSION_STRINGS_SECTION].items():
+            client = TelegramClient(StringSession(session_string), self._api_id, self._api_hash)
+            # Make connection: if the session string is correct, connection will be made without logging
+            await client.start(phone=lambda: input("Пожалуйста, введите ваш номер телефона: "),
+                               code_callback=lambda: input("Пожалуйста, введите полученный код подтверждения: "))
+
+            # Make a list of clients
+            clients.append(client)
+
+            # Update the parser object: maybe new updates were occurred
+            session_string = client.session.save()
+            parser.set(SESSION_STRINGS_SECTION, username, session_string)
+
+        # Initialize the dictionary and make dump of the session config file
+        self._clients = dict.fromkeys(self.chats, clients)
+        self._console_handler.dump_session_file()
+
     async def request(self, phone_number: str):
         await self._start_client()
 
