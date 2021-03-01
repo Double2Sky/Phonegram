@@ -27,9 +27,16 @@ async def get_session_string(api_id, api_hash, verbose=True):
             if re.match('(нет|н)', answer, re.IGNORECASE):
                 return None
 
-        async with TelegramClient(StringSession(), api_id, api_hash) as client:
-            user = await client.get_me()
-            return user.username, client.session.save()
+        client = TelegramClient(StringSession(), api_id, api_hash)
+        await client.start(phone=lambda: input("Пожалуйста, введите ваш номер телефона: "),
+                           code_callback=lambda: input("Пожалуйста, введите полученный код подтверждения: "))
+
+        user = await client.get_me()
+        username = user.username
+        session_string = client.session.save()
+        await client.disconnect()
+
+        return username, session_string
 
     except PhoneNumberInvalidError:
         logging.error("The invalid number was entered")
