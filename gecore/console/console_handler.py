@@ -105,3 +105,8 @@ class ConsoleHandler:
     def dump_session_file(self):
         with open(self.session_file, 'w') as file:
             self.config_parser.write(file)
+
+    @property
+    def bots(self):
+        with open(self._parameters.bots, 'r') as file:
+            return file.read().splitlines()
