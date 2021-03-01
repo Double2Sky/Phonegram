@@ -3,7 +3,7 @@ import re
 import sys
 
 from gecore.console.console_handler import ConsoleHandler, SESSION_STRINGS_SECTION
-from gecore.requester import GetContactRequester
+from gecore.requests.requester import GetContactRequester
 from gecore.utils import get_session_string
 
 
