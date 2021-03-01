@@ -33,9 +33,9 @@ async def main():
             else:
                 print("Некорректный ввод.")
 
-        requester = GetContactRequester(*console_handler.credentials,
-                                        session_strings=list(parser[SESSION_STRINGS_SECTION].items()),
-                                        chats=['getcontact_real_bot'])
+        requester = GetContactRequester(console_handler=console_handler,
+                                        chats=console_handler.bots)
+        await requester.run()
         response = await requester.request(phone_number)
         print(f'response = {response}\n')
 
