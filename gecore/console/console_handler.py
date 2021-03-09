@@ -2,6 +2,7 @@ import argparse
 import configparser
 import logging
 import os
+import sys
 
 logger = logging.getLogger('console_handler')
 
@@ -48,6 +49,10 @@ class ConsoleHandler:
                             help='the config file, containing information about bots',
                             default='./config/bots.cfg',
                             type=str)
+
+        parser.add_argument('-o', '--output',
+                            help='where the output result will print to (stdout by default',
+                            default=sys.stdout)
 
         return parser
 
