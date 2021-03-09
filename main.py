@@ -34,6 +34,7 @@ async def main():
 
         requester = GetContactRequester(console_handler=console_handler,
                                         chats=console_handler.bots)
+        await requester.run()
         response = await requester.request(console_handler.phone_number)
         console_handler.to_out(response)
 
