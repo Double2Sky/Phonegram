@@ -34,26 +34,41 @@ class ConsoleHandler:
         :return: an instance of the ArgumentParser class
         """
         parser = argparse.ArgumentParser(prog=program_name, description=description, epilog=epilog)
+        subparsers = parser.add_subparsers(title='Commands', dest='command')
 
-        parser.add_argument('number',
-                            help='the phone number that will be passed to bots',
-                            type=str)
+        # Request mode
+        request_mode = subparsers.add_parser('request',
+                                             help='make a request to the bots')
 
-        parser.add_argument('-c', '--credentials',
-                            help='the config file, containing credentials for a telegram client: api_id, api_hash and '
-                                 'session strings',
-                            default='./config/session.cfg',
-                            type=str)
+        request_mode.add_argument('number',
+                                  help='the phone number that will be passed to bots',
+                                  type=str)
 
-        parser.add_argument('-b', '--bots',
-                            help='the config file, containing information about bots',
-                            default='./config/bots.cfg',
-                            type=str)
+        request_mode.add_argument('-c', '--credentials',
+                                  help='the config file, containing credentials for a telegram client: '
+                                       'api_id, api_hash and session strings',
+                                  default='./config/session.cfg',
+                                  type=str)
 
-        parser.add_argument('-o', '--output',
-                            help='where the output result will print to (stdout by default)',
-                            default=sys.stdout,
-                            type=argparse.FileType(mode='w'))
+        request_mode.add_argument('-b', '--bots',
+                                  help='the config file, containing information about bots',
+                                  default='./config/bots.cfg',
+                                  type=str)
+
+        request_mode.add_argument('-o', '--output',
+                                  help='where the output result will print to (stdout by default)',
+                                  default=sys.stdout,
+                                  type=argparse.FileType(mode='w'))
+
+        # Setting mode
+        setting_mode = subparsers.add_parser('setting',
+                                             help='add session strings in the config file')
+
+        setting_mode.add_argument('-c', '--credentials',
+                                  help='the config file, containing credentials for a telegram client: '
+                                       'api_id, api_hash and session strings',
+                                  default='./config/session.cfg',
+                                  type=str)
 
         return parser
 
@@ -97,8 +112,9 @@ class ConsoleHandler:
 
             return api_id, api_hash
         except configparser.NoSectionError:
-            logger.error(f"The configuration file doesn't contain [{CLIENT_CREDENTIALS_SECTION}] section, please insert "
-                         "this section with the API_ID and API_HASH options")
+            logger.error(
+                f"The configuration file doesn't contain [{CLIENT_CREDENTIALS_SECTION}] section, please insert "
+                "this section with the API_ID and API_HASH options")
             exit(-3)
         except configparser.NoOptionError:
             logger.error("The configuration file doesn't contain the API_ID or API_HASH options")
@@ -136,3 +152,7 @@ class ConsoleHandler:
         else:
             self._parameters.output.write(response)
             self._parameters.output.close()
+
+    @property
+    def mode(self):
+        return self._parameters.command
