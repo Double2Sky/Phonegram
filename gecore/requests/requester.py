@@ -55,30 +55,20 @@ class GetContactRequester:
         self._console_handler.dump_session_file()
 
     async def request(self, phone_number: str):
-        for chat in self.chats:
-            await self.client.send_message(chat, phone_number)
+        """
+        Make request to the bots and aggregate all responses to one.
 
-        # response is None only if the message wasn't processed
-        while True:
-            if self.response is not None:
-                break
-            await asyncio.sleep(0.1)
+        :param phone_number: the requested phone number
+        :return: aggregated response in JSON format
+        """
+        result = {}
+        tasks = []
+        for bot in self._bots:
+            tasks.append(asyncio.create_task(bot.request(phone_number)))
 
-        await self.client.disconnect()
-        return self.response
+        await asyncio.gather(*tasks)
 
-    async def _start_client(self):
-        self.response = None
+        for index, bot in enumerate(self._bots):
+            result[bot.name] = tasks[index]
 
-        if not self.client.is_connected():
-            await self.client.start()
-
-    async def _handle_message(self, event):
-        logging.warning(event.text)
-
-        if re.search(r'(некорректный номер|запросов не осталось|настоящий getcontact|ничего не найдено)',
-                     event.text, re.IGNORECASE):
-            self.response = []
-        elif event.is_reply and re.search('результаты', event.text, re.IGNORECASE):
-            text = re.sub(r"Результаты по \+?[\d]{11}:", '', event.text)
-            self.response = [name.strip() for name in text.split('\n') if name]
+        return result
