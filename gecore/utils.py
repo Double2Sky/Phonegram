@@ -33,6 +33,9 @@ async def get_session_string(api_id, api_hash, verbose=True):
 
         user = await client.get_me()
         username = user.username
+        if username is None:
+            username = user.first_name + ' ' + user.last_name
+
         session_string = client.session.save()
         await client.disconnect()
 
