@@ -1,9 +1,10 @@
-import re
 import logging
+import sys
 import asyncio
-from telethon import TelegramClient, events
+from telethon import TelegramClient
 from telethon.sessions import StringSession
 from gecore.console.console_handler import SESSION_STRINGS_SECTION, ConsoleHandler
+from gecore.requests.bot_chat import BotChat
 
 logging.basicConfig(format='[%(asctime)s] MESSAGE:\n%(message)s\n',
                     level=logging.WARNING)
@@ -17,13 +18,9 @@ class GetContactRequester:
         :param chats: a list of chats that will be listened by this client
         :param console_handler: ConsoleHandler object
         """
-        api_id, api_hash = console_handler.credentials
-        self._api_id = api_id
-        self._api_hash = api_hash
         self._console_handler = console_handler
-        self._clients = None
+        self._bots = []
         self.chats = chats
-        self.response = None
 
     async def run(self):
         """
@@ -33,13 +30,16 @@ class GetContactRequester:
         clients = []
         parser = self._console_handler.config_parser
         for username, session_string in parser[SESSION_STRINGS_SECTION].items():
-            client = TelegramClient(StringSession(session_string), self._api_id, self._api_hash)
-            client.add_event_handler(self._handle_message,
-                                     events.NewMessage(chats=self.chats, incoming=True, outgoing=False))
+            client = TelegramClient(StringSession(session_string), *self._console_handler.credentials)
 
-            # Make connection: if the session string is correct, connection will be made without logging
-            await client.start(phone=lambda: input("Пожалуйста, введите ваш номер телефона: "),
-                               code_callback=lambda: input("Пожалуйста, введите полученный код подтверждения: "))
+            try:
+                # Make connection: if the session string is correct, connection will be made without logging
+                await client.start(phone=lambda: input("Пожалуйста, введите ваш номер телефона: "),
+                                   code_callback=lambda: input("Пожалуйста, введите полученный код подтверждения: "))
+            except Exception:
+                print(f'Для пользователя {username} session_string недействительна и будет удалена.', file=sys.stderr)
+                parser.remove_option(SESSION_STRINGS_SECTION, username)
+                continue
 
             # Make a list of clients
             clients.append(client)
@@ -48,8 +48,10 @@ class GetContactRequester:
             session_string = client.session.save()
             parser.set(SESSION_STRINGS_SECTION, username, session_string)
 
-        # Initialize the dictionary and make dump of the session config file
-        self._clients = dict.fromkeys(self.chats, clients)
+        # Initialize the list of bots and make dump of the session config file
+        for chat in self.chats:
+            bot_chat = BotChat(chat, clients)
+            self._bots.append(bot_chat)
         self._console_handler.dump_session_file()
 
     async def request(self, phone_number: str):
