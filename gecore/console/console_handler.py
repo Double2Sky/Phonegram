@@ -34,6 +34,10 @@ class ConsoleHandler:
         """
         parser = argparse.ArgumentParser(prog=program_name, description=description, epilog=epilog)
 
+        parser.add_argument('number',
+                            help='the phone number that will be passed to bots',
+                            type=str)
+
         parser.add_argument('-c', '--credentials',
                             help='the config file, containing credentials for a telegram client: api_id, api_hash and '
                                  'session strings',
@@ -110,3 +114,7 @@ class ConsoleHandler:
     def bots(self):
         with open(self._parameters.bots, 'r') as file:
             return file.read().splitlines()
+
+    @property
+    def phone_number(self):
+        return self._parameters.number
