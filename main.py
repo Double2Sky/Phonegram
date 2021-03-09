@@ -1,5 +1,4 @@
 import asyncio
-import re
 import sys
 
 from gecore.console.console_handler import ConsoleHandler, SESSION_STRINGS_SECTION
@@ -11,10 +10,15 @@ async def main():
     console_handler = ConsoleHandler(sys.argv[1:])
     parser = console_handler.config_parser
 
-    while True:
-        if len(parser[SESSION_STRINGS_SECTION]) == 0:
-            print("У вас нет ни одной активной сессии.")
+    if console_handler.mode == 'setting':
+        while True:
+            print(f'У вас активно {len(parser[SESSION_STRINGS_SECTION])} сессий на данный момент: ')
+            for username, session_string in parser[SESSION_STRINGS_SECTION].items():
+                print(username, '=', session_string)
+            print()
+
             pair = await get_session_string(*console_handler.credentials)
+            print()
             if pair is None:
                 print("Завершение работы.")
                 exit(0)
@@ -23,21 +27,15 @@ async def main():
                 parser.set(SESSION_STRINGS_SECTION, username, session_string)
                 console_handler.dump_session_file()
 
-        while True:
-            phone_number = input("Введите номер телефона (exit|выход - для выхода): ")
-            if re.match('(exit|выход)', phone_number, re.IGNORECASE):
-                print('Завершение работы.')
-                exit(0)
-            elif re.match(r'^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$', phone_number, re.IGNORECASE):
-                break
-            else:
-                print("Некорректный ввод.")
+    elif console_handler.mode == 'request':
+        if len(parser[SESSION_STRINGS_SECTION]) == 0:
+            print("У вас нет ни одной активной сессии. Настройте сессии в режиме setting.", file=sys.stderr)
+            exit(-1)
 
         requester = GetContactRequester(console_handler=console_handler,
                                         chats=console_handler.bots)
-        await requester.run()
-        response = await requester.request(phone_number)
-        print(f'response = {response}\n')
+        response = await requester.request(console_handler.phone_number)
+        console_handler.to_out(response)
 
 
 if __name__ == '__main__':
