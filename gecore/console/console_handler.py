@@ -51,8 +51,9 @@ class ConsoleHandler:
                             type=str)
 
         parser.add_argument('-o', '--output',
-                            help='where the output result will print to (stdout by default',
-                            default=sys.stdout)
+                            help='where the output result will print to (stdout by default)',
+                            default=sys.stdout,
+                            type=argparse.FileType(mode='w'))
 
         return parser
 
@@ -123,3 +124,15 @@ class ConsoleHandler:
     @property
     def phone_number(self):
         return self._parameters.number
+
+    def to_out(self, response: str):
+        """
+        Save the response into the file (stdout by default).
+
+        :param response: that will be saved
+        """
+        if self._parameters.output is None:
+            print(response)
+        else:
+            self._parameters.output.write(response)
+            self._parameters.output.close()
