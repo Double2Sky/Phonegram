@@ -50,3 +50,13 @@ async def get_session_string(api_id, api_hash, verbose=True):
     except Exception as e:
         logging.error(e)
         exit(-1)
+
+
+def get_regex(strings: list):
+    """
+    Compiles the regular expression from the list of patterns.
+
+    :param strings: a list of patterns
+    :return: regex
+    """
+    return re.compile("(" + "|".join(strings) + ")", re.IGNORECASE)
