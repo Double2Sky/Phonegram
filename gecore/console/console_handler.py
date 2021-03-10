@@ -52,7 +52,7 @@ class ConsoleHandler:
 
         request_mode.add_argument('-b', '--bots',
                                   help='the config file, containing information about bots',
-                                  default='./config/bots.cfg',
+                                  default='./config/bots.json',
                                   type=str)
 
         request_mode.add_argument('-o', '--output',
