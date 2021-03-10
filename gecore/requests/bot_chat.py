@@ -58,11 +58,21 @@ class BotChat:
         return "У вас нет запросов к этому боту"
 
     async def _handle_message(self, event):
-        if re.search(r'запросов не осталось', event.text, re.IGNORECASE):
-            self.not_queries = True
-        elif re.search(r'(некорректный номер|настоящий getcontact|ничего не найдено)',
-                       event.text, re.IGNORECASE):
+        no_queries_regex = get_regex(self.bot_config[NO_QUERIES]) \
+            if NO_QUERIES in self.bot_config \
+            else re.compile(r'запросов не осталось', re.IGNORECASE)
+
+        not_found_regex = get_regex(self.bot_config[NOT_FOUND]) \
+            if NOT_FOUND in self.bot_config \
+            else re.compile(r'ничего не найдено', re.IGNORECASE)
+
+        fields_regex = get_regex(self.bot_config[FIELDS]) \
+            if FIELDS in self.bot_config \
+            else re.compile(r'.*')
+
+        if no_queries_regex.search(event.text):
+            self.no_queries = True
+        elif not_found_regex.search(event.text):
             self.response = []
-        elif event.is_reply and re.search('результаты', event.text, re.IGNORECASE):
-            text = re.sub(r"Результаты по \+?[\d]{11}:", '', event.text)
-            self.response = [name.strip() for name in text.split('\n') if name]
+        elif fields_regex.search(event.text):
+            self.response = event.text
