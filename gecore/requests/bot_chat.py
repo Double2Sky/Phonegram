@@ -22,7 +22,7 @@ class BotChat:
         self.clients = clients
         self.is_active = True
         self.response = None
-        self.not_queries = False
+        self.no_queries = False
 
     async def request(self, number):
         """
