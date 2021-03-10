@@ -1,5 +1,6 @@
 import argparse
 import configparser
+import codecs
 import logging
 import os
 import sys
@@ -85,7 +86,7 @@ class ConsoleHandler:
             logger.error("The configuration file doesn't exist")
             exit(-1)
 
-        if self.mode == 'request' and not os.path.exists(parameters.bots):
+        if parameters.command == 'request' and not os.path.exists(parameters.bots):
             logger.error("The bots config file doesn't exist")
             exit(-1)
 
@@ -159,5 +160,5 @@ class ConsoleHandler:
 
     @property
     def bots(self):
-        with open(self._parameters.bots, 'r') as file:
+        with codecs.open(self._parameters.bots, 'r', encoding='utf-8') as file:
             return json.load(file)
