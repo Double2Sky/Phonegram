@@ -3,6 +3,7 @@ import configparser
 import logging
 import os
 import sys
+import json
 
 logger = logging.getLogger('console_handler')
 
@@ -84,6 +85,10 @@ class ConsoleHandler:
             logger.error("The configuration file doesn't exist")
             exit(-1)
 
+        if self.mode == 'request' and not os.path.exists(parameters.bots):
+            logger.error("The bots config file doesn't exist")
+            exit(-1)
+
         self._parameters = parameters
         self._read_config_file()
 
@@ -133,11 +138,6 @@ class ConsoleHandler:
             self.config_parser.write(file)
 
     @property
-    def bots(self):
-        with open(self._parameters.bots, 'r') as file:
-            return file.read().splitlines()
-
-    @property
     def phone_number(self):
         return self._parameters.number
 
@@ -156,3 +156,8 @@ class ConsoleHandler:
     @property
     def mode(self):
         return self._parameters.command
+
+    @property
+    def bots(self):
+        with open(self._parameters.bots, 'r') as file:
+            return json.load(file)
