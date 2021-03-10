@@ -2,12 +2,18 @@ import asyncio
 import re
 from datetime import datetime, timedelta
 from telethon import events
+from gecore.utils import get_regex
+
+# The defined parameters in the bots config file
+FIELDS = "FIELDS"
+NOT_FOUND = "NOT_FOUND"
+NO_QUERIES = "NO_QUERIES"
 
 
 class BotChat:
-    timeout = 60
+    timeout = 120
 
-    def __init__(self, name: str, clients: list):
+    def __init__(self, name: str, clients: list, bot_config: dict):
         """
 
         :param name:
@@ -20,6 +26,7 @@ class BotChat:
 
         self.name = name
         self.clients = clients
+        self.bot_config = bot_config
         self.is_active = True
         self.response = None
         self.no_queries = False
@@ -35,9 +42,9 @@ class BotChat:
             time = datetime.now()
 
             # response is None only if the message wasn't processed
-            # not_queries is True if the client has no queries more to the bot
+            # no_queries is True if the client has no queries more to the bot
             while True:
-                if self.response is not None or self.not_queries:
+                if self.response is not None or self.no_queries:
                     break
                 await asyncio.sleep(0.1)
 
