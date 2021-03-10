@@ -13,14 +13,15 @@ logging.basicConfig(format='[%(asctime)s] MESSAGE:\n%(message)s\n',
 class GetContactRequester:
     client: TelegramClient
 
-    def __init__(self, console_handler: ConsoleHandler, chats: list):
+    def __init__(self, console_handler: ConsoleHandler, bots: dict):
         """
         :param chats: a list of chats that will be listened by this client
         :param console_handler: ConsoleHandler object
         """
         self._console_handler = console_handler
         self._bots = []
-        self.chats = chats
+        self._bots_config = bots
+        self._names_bots = list(bots.keys())
 
     async def run(self):
         """
@@ -49,8 +50,8 @@ class GetContactRequester:
             parser.set(SESSION_STRINGS_SECTION, username, session_string)
 
         # Initialize the list of bots and make dump of the session config file
-        for chat in self.chats:
-            bot_chat = BotChat(chat, clients)
+        for name in self._names_bots:
+            bot_chat = BotChat(name, clients, self._bots_config[name])
             self._bots.append(bot_chat)
         self._console_handler.dump_session_file()
 
