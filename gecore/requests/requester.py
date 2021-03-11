@@ -20,6 +20,7 @@ class GetContactRequester:
         """
         self._console_handler = console_handler
         self._bots = []
+        self._clients = []
         self._bots_config = bots
         self._names_bots = list(bots.keys())
 
@@ -54,6 +55,7 @@ class GetContactRequester:
             bot_chat = BotChat(name, clients, self._bots_config[name])
             self._bots.append(bot_chat)
         self._console_handler.dump_session_file()
+        self._clients = clients
 
     async def request(self, phone_number: str):
         """
@@ -65,11 +67,12 @@ class GetContactRequester:
         result = {}
         tasks = []
         for bot in self._bots:
-            tasks.append(asyncio.create_task(bot.request(phone_number)))
+            tasks.append(bot.request(phone_number))
 
-        await asyncio.gather(*tasks)
+        for bot, task in zip(self._bots, asyncio.as_completed(tasks)):
+            result[bot.name] = await task
 
-        for index, bot in enumerate(self._bots):
-            result[bot.name] = tasks[index]
+        for client in self._clients:
+            await client.disconnect()
 
         return result
