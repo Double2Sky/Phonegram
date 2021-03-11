@@ -1,5 +1,6 @@
 import asyncio
 import sys
+import json
 
 from gecore.console.console_handler import ConsoleHandler, SESSION_STRINGS_SECTION
 from gecore.requests.requester import GetContactRequester
@@ -36,7 +37,7 @@ async def main():
                                         bots=console_handler.bots)
         await requester.run()
         response = await requester.request(console_handler.phone_number)
-        console_handler.to_out(response)
+        console_handler.to_out(json.dumps(response, ensure_ascii=False, indent=4))
 
 
 if __name__ == '__main__':
