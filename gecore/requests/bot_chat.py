@@ -73,6 +73,6 @@ class BotChat:
         if no_queries_regex.search(event.text):
             self.no_queries = True
         elif not_found_regex.search(event.text):
-            self.response = []
+            self.response = "Ничего не найдено"
         elif fields_regex.search(event.text):
             self.response = event.text
