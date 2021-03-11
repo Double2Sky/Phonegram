@@ -50,12 +50,12 @@ class BotChat:
 
                 # Check timeout time of answer
                 if datetime.now() > time + timedelta(seconds=self.timeout):
-                    return "Время ожидания ответа истекло"
+                    return self.name, "Время ожидания ответа истекло"
 
             if self.response is not None:
-                return self.response
+                return self.name, self.response
 
-        return "У вас нет запросов к этому боту"
+        return self.name, "У вас нет запросов к этому боту"
 
     async def _handle_message(self, event):
         no_queries_regex = get_regex(self.bot_config[NO_QUERIES]) \

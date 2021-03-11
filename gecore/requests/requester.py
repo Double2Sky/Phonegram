@@ -69,8 +69,9 @@ class GetContactRequester:
         for bot in self._bots:
             tasks.append(bot.request(phone_number))
 
-        for bot, task in zip(self._bots, asyncio.as_completed(tasks)):
-            result[bot.name] = await task
+        for task in asyncio.as_completed(tasks):
+            bot_name, bot_result = await task
+            result[bot_name] = bot_result
 
         for client in self._clients:
             await client.disconnect()
