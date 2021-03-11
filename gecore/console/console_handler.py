@@ -60,7 +60,7 @@ class ConsoleHandler:
         request_mode.add_argument('-o', '--output',
                                   help='where the output result will print to (stdout by default)',
                                   default=sys.stdout,
-                                  type=argparse.FileType(mode='w'))
+                                  type=argparse.FileType(mode='w', encoding='utf-8'))
 
         # Setting mode
         setting_mode = subparsers.add_parser('setting',
