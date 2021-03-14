@@ -3,6 +3,7 @@ import re
 from datetime import datetime, timedelta
 from telethon import events
 from gecore.utils import get_regex
+from telethon.errors.rpcerrorlist import UsernameInvalidError
 
 # The defined parameters in the bots config file
 FIELDS = "FIELDS"
@@ -38,7 +39,12 @@ class BotChat:
         :return:
         """
         for client in self.clients:
-            await client.send_message(self.name, number)
+            try:
+                await client.send_message(self.name, number)
+            except UsernameInvalidError:
+                await client.disconnect()
+                return self.name, "Этот бот не доступен или не существует"
+
             time = datetime.now()
 
             # response is None only if the message wasn't processed
@@ -69,6 +75,9 @@ class BotChat:
         fields_regex = get_regex(self.bot_config[FIELDS]) \
             if FIELDS in self.bot_config \
             else re.compile(r'.*')
+
+        for line in event.text.splitlines():
+            pass
 
         if no_queries_regex.search(event.text):
             self.no_queries = True
