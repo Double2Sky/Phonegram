@@ -4,8 +4,8 @@
 
 ## Установка
 
-1. `git clone https://github.com/Lpshkn/Gecore`
-2. `cd Gecore`
+1. `git clone https://github.com/Lpshkn/Osinteagle osinteagle`
+2. `cd osinteagle`
 3. `python3 -m venv venv && . ./venv/bin/activate`
 4. `python3 -m pip install -r requirements.txt`
 
