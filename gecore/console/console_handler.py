@@ -13,8 +13,8 @@ CLIENT_CREDENTIALS_SECTION = 'CLIENT_CREDENTIALS'
 
 
 class ConsoleHandler:
-    NAME = 'gecore'
-    DESCRIPTION = 'Gecore = GetContact Requests.'
+    NAME = 'osinteagle'
+    DESCRIPTION = 'Osinteagle - Aggregator of OSINT Telegram bots.'
     EPILOG = 'LPSHKN, 2021'
 
     def __init__(self, args):
@@ -81,6 +81,10 @@ class ConsoleHandler:
         :return: parsed arguments
         """
         parameters = self._parser.parse_args(args)
+
+        if parameters.command is None:
+            self._parser.error("Вам необходимо задать одну из двух команд: setting (для настройки) "
+                               "или request (для запроса)")
 
         if not os.path.exists(parameters.credentials):
             logger.error("The configuration file doesn't exist")
