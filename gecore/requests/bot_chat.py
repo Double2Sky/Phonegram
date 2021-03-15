@@ -75,12 +75,12 @@ class BotChat:
             if FIELDS in self.bot_config \
             else re.compile(r'.*')
 
-        for line in event.text.splitlines():
-            pass
-
         if no_queries_regex.search(event.text):
             self.no_queries = True
         elif not_found_regex.search(event.text):
             self.response = "Ничего не найдено"
         elif fields_regex.search(event.text):
-            self.response = event.text
+            text = re.sub(r"[^\w\s]", "", event.text)
+            text = re.sub(r"\n+", "\n", text)
+            text = re.sub(r" +", ' ', text)
+            self.response = text
