@@ -12,7 +12,7 @@ NO_QUERIES = "NO_QUERIES"
 
 
 class BotChat:
-    timeout = 120
+    timeout = 60
 
     def __init__(self, name: str, clients: list, bot_config: dict):
         """
@@ -42,8 +42,7 @@ class BotChat:
             try:
                 await client.send_message(self.name, number)
             except UsernameInvalidError:
-                await client.disconnect()
-                return self.name, "Этот бот не доступен или не существует"
+                self.response = "Этот бот недоступен или не существует"
 
             time = datetime.now()
 
