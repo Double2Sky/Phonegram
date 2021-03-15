@@ -6,6 +6,7 @@ from telethon.sessions import StringSession
 from gecore.console.console_handler import SESSION_STRINGS_SECTION, ConsoleHandler
 from gecore.requests.bot_chat import BotChat
 
+
 logging.basicConfig(format='[%(asctime)s] MESSAGE:\n%(message)s\n',
                     level=logging.WARNING)
 
@@ -69,8 +70,7 @@ class GetContactRequester:
         for bot in self._bots:
             tasks.append(bot.request(phone_number))
 
-        for task in asyncio.as_completed(tasks):
-            bot_name, bot_result = await task
+        for bot_name, bot_result in await asyncio.gather(*tasks, return_exceptions=True):
             result[bot_name] = bot_result
 
         for client in self._clients:
