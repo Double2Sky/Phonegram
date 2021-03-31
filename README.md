@@ -1,11 +1,11 @@
-# Osinteagle
+# Phonegram
 
 Агрегатор OSINT Telegram ботов.
 
 ## Установка
 
-1. `git clone https://github.com/Lpshkn/Osinteagle osinteagle`
-2. `cd osinteagle`
+1. `git clone https://github.com/Lpshkn/Phonegram phonegram`
+2. `cd phonegram`
 3. `python3 -m venv venv && . ./venv/bin/activate`
 4. `python3 -m pip install -r requirements.txt`
 
