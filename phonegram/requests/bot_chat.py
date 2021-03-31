@@ -2,7 +2,7 @@ import asyncio
 import re
 from datetime import datetime, timedelta
 from telethon import events
-from gecore.utils import get_regex
+from phonegram.utils import get_regex
 from telethon.errors.rpcerrorlist import UsernameInvalidError
 
 # The defined parameters in the bots config file

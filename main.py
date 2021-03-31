@@ -2,9 +2,9 @@ import asyncio
 import sys
 import json
 
-from gecore.console.console_handler import ConsoleHandler, SESSION_STRINGS_SECTION
-from gecore.requests.requester import GetContactRequester
-from gecore.utils import get_session_string
+from phonegram.console.console_handler import ConsoleHandler, SESSION_STRINGS_SECTION
+from phonegram.requests.requester import GetContactRequester
+from phonegram.utils import get_session_string
 
 
 async def main():
