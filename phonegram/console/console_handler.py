@@ -13,8 +13,8 @@ CLIENT_CREDENTIALS_SECTION = 'CLIENT_CREDENTIALS'
 
 
 class ConsoleHandler:
-    NAME = 'osinteagle'
-    DESCRIPTION = 'Osinteagle - Aggregator of OSINT Telegram bots.'
+    NAME = 'phonegram'
+    DESCRIPTION = 'Phonegram - Aggregator of OSINT Telegram bots.'
     EPILOG = 'LPSHKN, 2021'
 
     def __init__(self, args):
