@@ -50,6 +50,15 @@ class SessionTest(unittest.TestCase):
         with self.assertRaises(configparser.Error):
             api_hash = obj.api_hash
 
+    def test_dump_config(self):
+        obj = SessionConfig.initialize(self.credentials_filename)
+        obj._parser.set(constants.CLIENT_CREDENTIALS_SECTION, 'test', 'test_value')
+        obj.dump()
+
+        parser = configparser.ConfigParser()
+        parser.read(self.credentials_filename)
+        self.assertTrue(parser.has_option(constants.CLIENT_CREDENTIALS_SECTION, 'test'))
+
 
 if __name__ == '__main__':
     unittest.main()

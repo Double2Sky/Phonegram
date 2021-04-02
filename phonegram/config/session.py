@@ -7,6 +7,7 @@ from phonegram.config import constants
 
 class SessionConfig:
     _parser: configparser.ConfigParser
+    _config_filename: str
 
     @classmethod
     def initialize(cls, filename: str):
@@ -21,6 +22,7 @@ class SessionConfig:
 
         # Read the config file
         session_config = SessionConfig()
+        session_config._config_filename = filename
         session_config._parser = configparser.ConfigParser()
         session_config._parser.read(filename, encoding='utf-8')
 
@@ -80,3 +82,10 @@ class SessionConfig:
         except configparser.NoSectionError:
             raise configparser.Error(f"Конфигурационный файл сессии не содержит секции "
                                      f"{constants.SESSION_STRINGS_SECTION}, пожалуйста, добавьте её")
+
+    def dump(self):
+        """
+        Dumps the parser in the session config file.
+        """
+        with open(self._config_filename, 'w', encoding='utf-8') as file:
+            self._parser.write(file)
