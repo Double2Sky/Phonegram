@@ -1,5 +1,7 @@
 import os
 import configparser
+from typing import AbstractSet
+
 from phonegram.config import constants
 
 
@@ -60,3 +62,17 @@ class SessionConfig(configparser.ConfigParser):
         except configparser.NoOptionError:
             raise configparser.Error("Конфигурационный файл сессии не содержит опции API_HASH, пожалуйста, "
                                      "добавьте её")
+
+    @property
+    def session_strings(self) -> AbstractSet[tuple[str, str]]:
+        """
+        Returns pair <user_id, session_string> from the session config file.
+        This session string allow to authorize in the Telegram client.
+
+        :return: (tuple[str, str]) pairs of <user_id, session_string> or None if it's empty
+        """
+        try:
+            return strings if (strings := self[constants.SESSION_STRINGS_SECTION].items()) else None
+        except configparser.NoSectionError:
+            raise configparser.Error(f"Конфигурационный файл сессии не содержит секции "
+                                     f"{constants.SESSION_STRINGS_SECTION}, пожалуйста, добавьте её")
