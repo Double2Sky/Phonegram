@@ -5,12 +5,12 @@ from typing import AbstractSet
 from phonegram.config import constants
 
 
-class SessionConfig(configparser.ConfigParser):
+class SessionConfig:
     def __init__(self):
-        super().__init__()
+        self._parser = configparser.ConfigParser()
 
     @staticmethod
-    def create(filename: str):
+    def initialize(filename: str):
         """
         Creates the SessionConfig object and reads the config file.
 
@@ -22,11 +22,11 @@ class SessionConfig(configparser.ConfigParser):
 
         # Read the config file
         session_config = SessionConfig()
-        session_config.read(filename, encoding='utf-8')
+        session_config._parser.read(filename, encoding='utf-8')
 
         # Session strings may be omitted. Therefore, creates its section
-        if not session_config.has_section(constants.SESSION_STRINGS_SECTION):
-            session_config.add_section(constants.SESSION_STRINGS_SECTION)
+        if not session_config._parser.has_section(constants.SESSION_STRINGS_SECTION):
+            session_config._parser.add_section(constants.SESSION_STRINGS_SECTION)
 
         return session_config
 
@@ -38,7 +38,7 @@ class SessionConfig(configparser.ConfigParser):
         :return: (int) api_id
         """
         try:
-            api_id = int(self.get(constants.CLIENT_CREDENTIALS_SECTION, 'API_ID'))
+            api_id = int(self._parser.get(constants.CLIENT_CREDENTIALS_SECTION, 'API_ID'))
             return api_id
         except configparser.NoSectionError:
             raise configparser.Error(f"Конфигурационный файл сессии не содержит секции "
@@ -55,7 +55,7 @@ class SessionConfig(configparser.ConfigParser):
         :return: (str) api_hash
         """
         try:
-            return self.get(constants.CLIENT_CREDENTIALS_SECTION, 'API_HASH')
+            return self._parser.get(constants.CLIENT_CREDENTIALS_SECTION, 'API_HASH')
         except configparser.NoSectionError:
             raise configparser.Error(f"Конфигурационный файл сессии не содержит секции "
                                      f"{constants.CLIENT_CREDENTIALS_SECTION}, пожалуйста, добавьте её")
@@ -72,7 +72,7 @@ class SessionConfig(configparser.ConfigParser):
         :return: (tuple[str, str]) pairs of <user_id, session_string> or None if it's empty
         """
         try:
-            return strings if (strings := self[constants.SESSION_STRINGS_SECTION].items()) else None
+            return strings if (strings := self._parser[constants.SESSION_STRINGS_SECTION].items()) else None
         except configparser.NoSectionError:
             raise configparser.Error(f"Конфигурационный файл сессии не содержит секции "
                                      f"{constants.SESSION_STRINGS_SECTION}, пожалуйста, добавьте её")
