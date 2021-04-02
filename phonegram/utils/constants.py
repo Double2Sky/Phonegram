@@ -1,0 +1,3 @@
+# The name of sections from a session configuration file
+SESSION_STRINGS_SECTION = 'SESSION_STRINGS'
+CLIENT_CREDENTIALS_SECTION = 'CLIENT_CREDENTIALS'

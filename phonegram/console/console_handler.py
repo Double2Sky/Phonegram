@@ -6,10 +6,9 @@ import os
 import sys
 import json
 
-logger = logging.getLogger('console_handler')
+from phonegram.utils import constants
 
-SESSION_STRINGS_SECTION = 'SESSION_STRINGS'
-CLIENT_CREDENTIALS_SECTION = 'CLIENT_CREDENTIALS'
+logger = logging.getLogger('console_handler')
 
 
 class ConsoleHandler:
@@ -98,8 +97,8 @@ class ConsoleHandler:
         self._config_parser = configparser.ConfigParser()
         try:
             self._config_parser.read(self.session_file, encoding='utf-8')
-            if not self._config_parser.has_section(SESSION_STRINGS_SECTION):
-                self._config_parser.add_section(SESSION_STRINGS_SECTION)
+            if not self._config_parser.has_section(constants.SESSION_STRINGS_SECTION):
+                self._config_parser.add_section(constants.SESSION_STRINGS_SECTION)
         except configparser.Error as error:
             logger.error(error)
             exit(-2)
@@ -113,13 +112,13 @@ class ConsoleHandler:
         :return: tuple API_ID, API_HASH
         """
         try:
-            api_id = self._config_parser.get(CLIENT_CREDENTIALS_SECTION, 'API_ID')
-            api_hash = self._config_parser.get(CLIENT_CREDENTIALS_SECTION, 'API_HASH')
+            api_id = self._config_parser.get(constants.CLIENT_CREDENTIALS_SECTION, 'API_ID')
+            api_hash = self._config_parser.get(constants.CLIENT_CREDENTIALS_SECTION, 'API_HASH')
 
             return api_id, api_hash
         except configparser.NoSectionError:
             logger.error(
-                f"The configuration file doesn't contain [{CLIENT_CREDENTIALS_SECTION}] section, please insert "
+                f"The configuration file doesn't contain [{constants.CLIENT_CREDENTIALS_SECTION}] section, please insert "
                 "this section with the API_ID and API_HASH options")
             exit(-3)
         except configparser.NoOptionError:
