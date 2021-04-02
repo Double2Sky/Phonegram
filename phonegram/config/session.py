@@ -6,11 +6,10 @@ from phonegram.config import constants
 
 
 class SessionConfig:
-    def __init__(self):
-        self._parser = configparser.ConfigParser()
+    _parser: configparser.ConfigParser
 
-    @staticmethod
-    def initialize(filename: str):
+    @classmethod
+    def initialize(cls, filename: str):
         """
         Creates the SessionConfig object and reads the config file.
 
@@ -22,6 +21,7 @@ class SessionConfig:
 
         # Read the config file
         session_config = SessionConfig()
+        session_config._parser = configparser.ConfigParser()
         session_config._parser.read(filename, encoding='utf-8')
 
         if not session_config._parser.has_section(constants.CLIENT_CREDENTIALS_SECTION):
