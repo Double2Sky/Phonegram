@@ -1,9 +1,9 @@
 import os
-from configparser import ConfigParser
+import configparser
 from phonegram.config import constants
 
 
-class SessionConfig(ConfigParser):
+class SessionConfig(configparser.ConfigParser):
     def __init__(self):
         super().__init__()
 
@@ -27,3 +27,21 @@ class SessionConfig(ConfigParser):
             session_config.add_section(constants.SESSION_STRINGS_SECTION)
 
         return session_config
+
+    @property
+    def api_id(self) -> int:
+        """
+        Returns api_id of a Telegram client from the session config file
+
+        :return: (int) api_id
+        """
+        try:
+            api_id = int(self.get(constants.CLIENT_CREDENTIALS_SECTION, 'API_ID'))
+            return api_id
+        except configparser.NoSectionError:
+            raise configparser.Error(f"Конфигурационный файл сессии не содержит секции "
+                                     f"{constants.CLIENT_CREDENTIALS_SECTION}, пожалуйста, добавьте её")
+
+        except configparser.NoOptionError:
+            raise configparser.Error("Конфигурационный файл сессии не содержит опции API_ID, пожалуйста, "
+                                     "добавьте её")
