@@ -41,7 +41,22 @@ class SessionConfig(configparser.ConfigParser):
         except configparser.NoSectionError:
             raise configparser.Error(f"Конфигурационный файл сессии не содержит секции "
                                      f"{constants.CLIENT_CREDENTIALS_SECTION}, пожалуйста, добавьте её")
-
         except configparser.NoOptionError:
             raise configparser.Error("Конфигурационный файл сессии не содержит опции API_ID, пожалуйста, "
+                                     "добавьте её")
+
+    @property
+    def api_hash(self) -> str:
+        """
+        Returns api_hash of a Telegram client from the session config file
+
+        :return: (str) api_hash
+        """
+        try:
+            return self.get(constants.CLIENT_CREDENTIALS_SECTION, 'API_HASH')
+        except configparser.NoSectionError:
+            raise configparser.Error(f"Конфигурационный файл сессии не содержит секции "
+                                     f"{constants.CLIENT_CREDENTIALS_SECTION}, пожалуйста, добавьте её")
+        except configparser.NoOptionError:
+            raise configparser.Error("Конфигурационный файл сессии не содержит опции API_HASH, пожалуйста, "
                                      "добавьте её")
