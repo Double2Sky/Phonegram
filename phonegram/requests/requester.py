@@ -3,8 +3,8 @@ import sys
 import asyncio
 from telethon import TelegramClient
 from telethon.sessions import StringSession
-from gecore.console.console_handler import SESSION_STRINGS_SECTION, ConsoleHandler
-from gecore.requests.bot_chat import BotChat
+from phonegram.console.console_handler import SESSION_STRINGS_SECTION, ConsoleHandler
+from phonegram.requests.bot_chat import BotChat
 
 
 logging.basicConfig(format='[%(asctime)s] MESSAGE:\n%(message)s\n',

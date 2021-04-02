@@ -13,7 +13,7 @@ CLIENT_CREDENTIALS_SECTION = 'CLIENT_CREDENTIALS'
 
 
 class ConsoleHandler:
-    NAME = 'gecore'
+    NAME = 'phonegram'
     DESCRIPTION = 'Gecore = GetContact Requests.'
     EPILOG = 'LPSHKN, 2021'
 
