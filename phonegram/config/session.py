@@ -89,3 +89,16 @@ class SessionConfig:
         """
         with open(self._config_filename, 'w', encoding='utf-8') as file:
             self._parser.write(file)
+
+    def add_session_string(self, user_id: int, session_string: str, dump=True):
+        """
+        Adds a session string in the session config file.
+        If dump is true, immediately dumps new changes into the config file.
+
+        :param user_id: (int) the id of a user
+        :param session_string: (str) the session string that must be serialized
+        :param dump: (bool) if it's true, dumps changes into the config file
+        """
+        self._parser.set(constants.SESSION_STRINGS_SECTION, user_id, session_string)
+        if dump:
+            self.dump()
