@@ -73,7 +73,8 @@ class GetContactRequester:
         for bot_name, bot_result in await asyncio.gather(*tasks, return_exceptions=True):
             result[bot_name] = bot_result
 
+        return result
+
+    async def stop(self):
         for client in self._clients:
             await client.disconnect()
-
-        return result
