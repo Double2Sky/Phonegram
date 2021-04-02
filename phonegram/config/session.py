@@ -90,7 +90,7 @@ class SessionConfig:
         with open(self._config_filename, 'w', encoding='utf-8') as file:
             self._parser.write(file)
 
-    def add_session_string(self, user_id: int, session_string: str, dump=True):
+    def add_session_string(self, user_id: str, session_string: str, dump=True):
         """
         Adds a session string in the session config file.
         If dump is true, immediately dumps new changes into the config file.
@@ -100,5 +100,17 @@ class SessionConfig:
         :param dump: (bool) if it's true, dumps changes into the config file
         """
         self._parser.set(constants.SESSION_STRINGS_SECTION, user_id, session_string)
+        if dump:
+            self.dump()
+
+    def remove_session_string(self, user_id: str, dump=True):
+        """
+        Remove a session string from the session config file.
+        If dump is true, immediately dumps new changes into the config file.
+
+        :param user_id: (int) the id of a user
+        :param dump: (bool) if it's true, dumps changes into the config file
+        """
+        self._parser.remove_option(constants.SESSION_STRINGS_SECTION, user_id)
         if dump:
             self.dump()
