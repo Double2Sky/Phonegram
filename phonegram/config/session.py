@@ -24,6 +24,10 @@ class SessionConfig:
         session_config = SessionConfig()
         session_config._parser.read(filename, encoding='utf-8')
 
+        if not session_config._parser.has_section(constants.CLIENT_CREDENTIALS_SECTION):
+            raise configparser.Error(f"Конфигурационный файл сессии не содержит секции "
+                                     f"{constants.CLIENT_CREDENTIALS_SECTION}, пожалуйста, добавьте её")
+
         # Session strings may be omitted. Therefore, creates its section
         if not session_config._parser.has_section(constants.SESSION_STRINGS_SECTION):
             session_config._parser.add_section(constants.SESSION_STRINGS_SECTION)
