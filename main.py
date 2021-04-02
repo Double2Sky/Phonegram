@@ -37,6 +37,8 @@ async def main():
                                         bots=console_handler.bots)
         await requester.run()
         response = await requester.request(console_handler.phone_number)
+        await requester.stop()
+
         console_handler.to_out(json.dumps(response, ensure_ascii=False, indent=4))
 
 

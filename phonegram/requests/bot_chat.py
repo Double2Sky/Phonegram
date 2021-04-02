@@ -9,6 +9,7 @@ from telethon.errors.rpcerrorlist import UsernameInvalidError
 FIELDS = "FIELDS"
 NOT_FOUND = "NOT_FOUND"
 NO_QUERIES = "NO_QUERIES"
+ENABLED = "ENABLED"
 
 
 class BotChat:
@@ -16,7 +17,6 @@ class BotChat:
 
     def __init__(self, name: str, clients: list, bot_config: dict):
         """
-
         :param name:
         :param clients:
         """
