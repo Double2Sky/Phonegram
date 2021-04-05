@@ -10,11 +10,7 @@ logger = logging.getLogger('console_handler')
 
 class ConsoleHandler:
     NAME = 'phonegram'
-<<<<<<< HEAD:phonegram/console/console_handler.py
-    DESCRIPTION = 'Phonegram - Aggregator of OSINT Telegram bots.'
-=======
     DESCRIPTION = 'Aggregator of OSINT Telegram bots.'
->>>>>>> develop:phonegram/console_handler.py
     EPILOG = 'LPSHKN, 2021'
 
     def __init__(self, args):
@@ -83,12 +79,7 @@ class ConsoleHandler:
         parameters = self._parser.parse_args(args)
 
         if parameters.command is None:
-<<<<<<< HEAD:phonegram/console/console_handler.py
-            self._parser.error("Вам необходимо задать одну из двух команд: setting (для настройки) "
-                               "или request (для запроса)")
-=======
             self._parser.error("Вы не выбрали ни один режим работы. Выберите setting или request.")
->>>>>>> develop:phonegram/console_handler.py
 
         if not os.path.exists(parameters.credentials):
             logger.error("The configuration file doesn't exist")
