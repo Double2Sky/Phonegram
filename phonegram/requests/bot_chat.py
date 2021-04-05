@@ -2,13 +2,18 @@ import asyncio
 import re
 from datetime import datetime, timedelta
 from telethon import events
+<<<<<<< HEAD:phonegram/requests/bot_chat.py
 from phonegram.utils import get_regex
+=======
+from phonegram.utils.utils import get_regex
+>>>>>>> develop:gecore/requests/bot_chat.py
 from telethon.errors.rpcerrorlist import UsernameInvalidError
 
 # The defined parameters in the bots config file
 FIELDS = "FIELDS"
 NOT_FOUND = "NOT_FOUND"
 NO_QUERIES = "NO_QUERIES"
+ENABLED = "ENABLED"
 
 
 class BotChat:
@@ -16,7 +21,6 @@ class BotChat:
 
     def __init__(self, name: str, clients: list, bot_config: dict):
         """
-
         :param name:
         :param clients:
         """

@@ -32,14 +32,12 @@ async def get_session_string(api_id, api_hash, verbose=True):
                            code_callback=lambda: input("Пожалуйста, введите полученный код подтверждения: "))
 
         user = await client.get_me()
-        username = user.username
-        if username is None:
-            username = user.first_name + ' ' + user.last_name
+        user_id = str(user.id)
 
         session_string = client.session.save()
         await client.disconnect()
 
-        return username, session_string
+        return user_id, session_string
 
     except PhoneNumberInvalidError:
         logging.error("The invalid number was entered")

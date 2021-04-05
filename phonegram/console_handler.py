@@ -1,5 +1,4 @@
 import argparse
-import configparser
 import codecs
 import logging
 import os
@@ -8,13 +7,14 @@ import json
 
 logger = logging.getLogger('console_handler')
 
-SESSION_STRINGS_SECTION = 'SESSION_STRINGS'
-CLIENT_CREDENTIALS_SECTION = 'CLIENT_CREDENTIALS'
-
 
 class ConsoleHandler:
     NAME = 'phonegram'
+<<<<<<< HEAD:phonegram/console/console_handler.py
     DESCRIPTION = 'Phonegram - Aggregator of OSINT Telegram bots.'
+=======
+    DESCRIPTION = 'Aggregator of OSINT Telegram bots.'
+>>>>>>> develop:phonegram/console_handler.py
     EPILOG = 'LPSHKN, 2021'
 
     def __init__(self, args):
@@ -83,8 +83,12 @@ class ConsoleHandler:
         parameters = self._parser.parse_args(args)
 
         if parameters.command is None:
+<<<<<<< HEAD:phonegram/console/console_handler.py
             self._parser.error("Вам необходимо задать одну из двух команд: setting (для настройки) "
                                "или request (для запроса)")
+=======
+            self._parser.error("Вы не выбрали ни один режим работы. Выберите setting или request.")
+>>>>>>> develop:phonegram/console_handler.py
 
         if not os.path.exists(parameters.credentials):
             logger.error("The configuration file doesn't exist")
@@ -95,52 +99,6 @@ class ConsoleHandler:
             exit(-1)
 
         self._parameters = parameters
-        self._read_config_file()
-
-    def _read_config_file(self):
-        # Read the config file
-        self._config_parser = configparser.ConfigParser()
-        try:
-            self._config_parser.read(self.session_file, encoding='utf-8')
-            if not self._config_parser.has_section(SESSION_STRINGS_SECTION):
-                self._config_parser.add_section(SESSION_STRINGS_SECTION)
-        except configparser.Error as error:
-            logger.error(error)
-            exit(-2)
-
-    @property
-    def credentials(self):
-        """
-        Method reads gets a tuple of API_ID, API_HASH from the config file
-        are necessary for the Telegram Client API
-
-        :return: tuple API_ID, API_HASH
-        """
-        try:
-            api_id = self._config_parser.get(CLIENT_CREDENTIALS_SECTION, 'API_ID')
-            api_hash = self._config_parser.get(CLIENT_CREDENTIALS_SECTION, 'API_HASH')
-
-            return api_id, api_hash
-        except configparser.NoSectionError:
-            logger.error(
-                f"The configuration file doesn't contain [{CLIENT_CREDENTIALS_SECTION}] section, please insert "
-                "this section with the API_ID and API_HASH options")
-            exit(-3)
-        except configparser.NoOptionError:
-            logger.error("The configuration file doesn't contain the API_ID or API_HASH options")
-            exit(-4)
-
-    @property
-    def config_parser(self) -> configparser.ConfigParser:
-        return self._config_parser
-
-    @property
-    def session_file(self):
-        return self._parameters.credentials
-
-    def dump_session_file(self):
-        with open(self.session_file, 'w') as file:
-            self.config_parser.write(file)
 
     @property
     def phone_number(self):
@@ -166,3 +124,7 @@ class ConsoleHandler:
     def bots(self):
         with codecs.open(self._parameters.bots, 'r', encoding='utf-8') as file:
             return json.load(file)
+
+    @property
+    def credentials_filename(self):
+        return self._parameters.credentials
