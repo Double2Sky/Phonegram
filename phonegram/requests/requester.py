@@ -3,13 +3,8 @@ import sys
 import asyncio
 from telethon import TelegramClient
 from telethon.sessions import StringSession
-<<<<<<< HEAD:phonegram/requests/requester.py
-from phonegram.console.console_handler import SESSION_STRINGS_SECTION, ConsoleHandler
-from phonegram.requests.bot_chat import BotChat
-=======
 from phonegram.requests.bot_chat import BotChat
 from phonegram.config.session import SessionConfig
->>>>>>> develop:gecore/requests/requester.py
 
 
 logging.basicConfig(format='[%(asctime)s] MESSAGE:\n%(message)s\n',
@@ -19,8 +14,8 @@ logging.basicConfig(format='[%(asctime)s] MESSAGE:\n%(message)s\n',
 class Requester:
     def __init__(self, session_config: SessionConfig, bots: dict):
         """
-        :param chats: a list of chats that will be listened by this client
-        :param console_handler: ConsoleHandler object
+        :param session_config: object of SessionConfig
+        :param bots: JSON settings of a list of bots
         """
         self._session_config = session_config
         self._bots = []
