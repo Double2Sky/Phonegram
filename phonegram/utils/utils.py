@@ -1,8 +1,11 @@
 import logging
 import re
+import os
 from telethon import TelegramClient
 from telethon.sessions import StringSession
 from telethon.errors.rpcerrorlist import PhoneNumberInvalidError
+from phonegram.utils.constants import PHONE_NUMBER_REGEX
+from phonegram.utils.errors import IncorrectPhoneNumberError
 
 logging.basicConfig(format='\n[%(asctime)s]: %(message)s\n')
 
@@ -58,3 +61,32 @@ def get_regex(strings: list):
     :return: regex
     """
     return re.compile("(" + "|".join(strings) + ")", re.IGNORECASE)
+
+
+def get_phone_numbers(filename: str, ignore_incorrect=True) -> list[str]:
+    """
+    Obtain a list of phone numbers from the file.
+
+    :param filename: the name of a file containing a list of numbers
+    :param ignore_incorrect: specifies if an incorrect phone number met, skip it, else raise an exception
+    :return: a list of phone numbers
+    """
+    if not os.path.exists(filename):
+        raise FileNotFoundError(f"Файл со списком мобильных номеров по заданному пути {filename} не найден, "
+                                f"либо вы некорректно ввели номер телефона")
+
+    with open(filename, 'r', encoding='utf-8') as file:
+        strings = re.split(r'\n+', file.read())
+
+    phone_numbers = []
+    if ignore_incorrect:
+        phone_numbers = [phone_number.strip() for phone_number in strings
+                         if PHONE_NUMBER_REGEX.match(phone_number)]
+    else:
+        for phone_number in strings:
+            if PHONE_NUMBER_REGEX.match(phone_number):
+                phone_numbers.append(phone_number)
+            else:
+                raise IncorrectPhoneNumberError(phone_number)
+
+    return phone_numbers
