@@ -2,16 +2,10 @@ import asyncio
 import sys
 import json
 
-<<<<<<< HEAD
-from phonegram.console.console_handler import ConsoleHandler, SESSION_STRINGS_SECTION
-from phonegram.requests.requester import GetContactRequester
-from phonegram.utils import get_session_string
-=======
 from phonegram.console_handler import ConsoleHandler
 from phonegram.requests.requester import Requester
 from phonegram.utils.utils import get_session_string
 from phonegram.config.session import SessionConfig
->>>>>>> develop
 
 
 async def main():
@@ -42,13 +36,9 @@ async def main():
         requester = Requester(session_config=session_config, bots=console_handler.bots)
         await requester.run()
         response = await requester.request(console_handler.phone_number)
-<<<<<<< HEAD
-        console_handler.to_out(json.dumps(response, ensure_ascii=False, indent=4) + '\n')
-=======
         await requester.stop()
 
         console_handler.to_out(json.dumps(response, ensure_ascii=False, indent=4))
->>>>>>> develop
 
 
 if __name__ == '__main__':
