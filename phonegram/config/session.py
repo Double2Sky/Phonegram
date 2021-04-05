@@ -78,7 +78,7 @@ class SessionConfig:
         :return: (tuple[str, str]) pairs of <user_id, session_string> or None if it's empty
         """
         try:
-            return strings if (strings := self._parser[constants.SESSION_STRINGS_SECTION].items()) else None
+            return self._parser[constants.SESSION_STRINGS_SECTION].items()
         except configparser.NoSectionError:
             raise configparser.Error(f"Конфигурационный файл сессии не содержит секции "
                                      f"{constants.SESSION_STRINGS_SECTION}, пожалуйста, добавьте её")
